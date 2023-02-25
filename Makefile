@@ -1,24 +1,36 @@
 NAME = minitalk
-CLIENT = client.c 
-SERVER = server.c
+
+CLIENT = client
+CLIENTSRC = client.c
+CLIENTOBJ = $(CLIENTSRC:.c=.o)
+
+SERVER = server
+SERVERSRC = server.c
+SERVEROBJ = $(SERVERSRC:.c=.o)
+
 LIBFT = ./libft/libft.a
 
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-all: $(NAME)
+all: $(CLIENT) $(SERVER)
 
-$(NAME) : $(libft) $(SERVER) $(CLIENT)
-	@make -C ./libft
-	$(CC) $(CFLAGS) -o server $(SERVER) $(LIBFT)
-	$(CC) $(CFLAGS) -o client $(CLIENT) $(LIBFT)
+$(CLIENT): $(CLIENTOBJ)
+	make -C ./libft
+	$(CC) $(CFLAGS) -o $(CLIENT) $(CLIENTOBJ) $(LIBFT)
+
+$(SERVER): $(SERVEROBJ)
+	make -C ./libft
+	$(CC) $(CFLAGS) -o $(SERVER) $(SERVEROBJ) $(LIBFT)
 
 clean:
-	rm 
+	rm $(CLIENTOBJ) $(SERVEROBJ)
 	rm ./libft/*.o
 
-flcean : clean
+fclean : clean
+	rm client server
+	rm ./libft/libft.a
 
-
+re : fclean all
 
 .PHONY : all clean flcean re
